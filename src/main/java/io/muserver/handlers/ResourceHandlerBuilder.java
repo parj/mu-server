@@ -21,6 +21,7 @@ public class ResourceHandlerBuilder implements MuHandlerBuilder<ResourceHandler>
     private String pathToServeFrom = "/";
     private String defaultFile = "index.html";
     private ResourceProviderFactory resourceProviderFactory;
+    private boolean allowDirectoryListing = false;
 
     /**
      * Specify custom filename extension to mime-type mappings. By default {@link ResourceType#DEFAULT_EXTENSION_MAPPINGS}
@@ -35,11 +36,22 @@ public class ResourceHandlerBuilder implements MuHandlerBuilder<ResourceHandler>
 
     /**
      * Specifies the path to serve the static from.
-     * @param pathToServeFrom A path that static data should be served from. Defaults to <code>/</code>
+     * @param pathToServeFrom A path that static data should be served from.
      * @return The builder
      */
     public ResourceHandlerBuilder withPathToServeFrom(String pathToServeFrom) {
         this.pathToServeFrom = pathToServeFrom;
+        return this;
+    }
+
+    /**
+     * Specifies whether or not the contents of directories can be listed.
+     * @param allowDirectoryListing If true, and there is no default file for a directory, then the files in the directory will be listed.
+     *                              Defaults to <code>false/</code>
+     * @return The builder
+     */
+    ResourceHandlerBuilder withDirectoryListingAllowed(boolean allowDirectoryListing) {
+        this.allowDirectoryListing = allowDirectoryListing;
         return this;
     }
 
@@ -66,7 +78,7 @@ public class ResourceHandlerBuilder implements MuHandlerBuilder<ResourceHandler>
         if (resourceProviderFactory == null) {
             throw new IllegalStateException("No resourceProviderFactory has been set");
         }
-        return new ResourceHandler(resourceProviderFactory, pathToServeFrom, defaultFile, extensionToResourceType);
+        return new ResourceHandler(resourceProviderFactory, pathToServeFrom, defaultFile, extensionToResourceType, allowDirectoryListing);
     }
 
 

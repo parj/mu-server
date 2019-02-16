@@ -22,12 +22,14 @@ public class ResourceHandler implements MuHandler {
     private final String pathToServeFrom;
     private final String defaultFile;
     private final ResourceProviderFactory resourceProviderFactory;
+    private final boolean allowDirectoryListing;
 
-    ResourceHandler(ResourceProviderFactory resourceProviderFactory, String pathToServeFrom, String defaultFile, Map<String, ResourceType> extensionToResourceType) {
+    ResourceHandler(ResourceProviderFactory resourceProviderFactory, String pathToServeFrom, String defaultFile, Map<String, ResourceType> extensionToResourceType, boolean allowDirectoryListing) {
         this.resourceProviderFactory = resourceProviderFactory;
         this.pathToServeFrom = pathToServeFrom;
         this.extensionToResourceType = extensionToResourceType;
         this.defaultFile = defaultFile;
+        this.allowDirectoryListing = allowDirectoryListing;
     }
 
     @Override
@@ -36,7 +38,8 @@ public class ResourceHandler implements MuHandler {
         if (!requestPath.startsWith(pathToServeFrom)) {
             return false;
         }
-        if (requestPath.endsWith("/") && defaultFile != null) {
+        boolean isDirPath = requestPath.endsWith("/");
+        if (isDirPath && defaultFile != null) {
             requestPath += defaultFile;
         }
 
@@ -46,7 +49,11 @@ public class ResourceHandler implements MuHandler {
 
         String decodedRelativePath = Mutils.urlDecode(pathWithoutWebPrefix);
         ResourceProvider provider = resourceProviderFactory.get(decodedRelativePath);
+        boolean sendBody = request.method() != Method.HEAD;
         if (!provider.exists()) {
+            if (isDirPath && provider instanceof FileProvider) {
+                return provider.showDirectoryListing(response, sendBody);
+            }
             return false;
         }
         if (provider.isDirectory()) {
@@ -56,7 +63,6 @@ public class ResourceHandler implements MuHandler {
             String filename = requestPath.substring(requestPath.lastIndexOf('/'));
             Date lastModified = provider.lastModified();
             addHeaders(response, filename, provider.fileSize(), lastModified);
-            boolean sendBody = request.method() != Method.HEAD;
 
             String ims = request.headers().get(HeaderNames.IF_MODIFIED_SINCE);
             if (ims != null) {
@@ -160,7 +166,7 @@ public class ResourceHandler implements MuHandler {
             if (resourceProviderFactory == null) {
                 throw new IllegalStateException("No resourceProviderFactory has been set");
             }
-            return new ResourceHandler(resourceProviderFactory, pathToServeFrom, defaultFile, extensionToResourceType);
+            return new ResourceHandler(resourceProviderFactory, pathToServeFrom, defaultFile, extensionToResourceType, false);
         }
     }
 

@@ -7,16 +7,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.net.www.protocol.file.FileURLConnection;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.text.NumberFormat;
+import java.time.Instant;
 import java.util.Date;
+
+import static io.muserver.Mutils.htmlEncode;
 
 interface ResourceProvider {
     boolean exists();
@@ -28,6 +34,8 @@ interface ResourceProvider {
     Date lastModified();
 
     void sendTo(MuResponse response, boolean sendBody) throws IOException;
+
+    boolean showDirectoryListing(MuResponse response, boolean sendBody) throws IOException;
 }
 
 interface ResourceProviderFactory {
@@ -94,6 +102,60 @@ class FileProvider implements ResourceProvider {
         } else {
             response.outputStream();
         }
+    }
+
+    @Override
+    public boolean showDirectoryListing(MuResponse response, boolean sendBody) throws IOException {
+
+        response.contentType("text/html; charset=utf-8");
+
+        Path dir = localPath.getParent().normalize().toAbsolutePath();
+        if (!Files.isDirectory(dir)) {
+            return false;
+        }
+
+        String title = "Index of " + dir.getFileName();
+
+        try (BufferedWriter writer = new BufferedWriter(response.writer(), 8192)) {
+            writer.append("<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head><title>" + htmlEncode(title) + "</title>\n" +
+                "<style>\n" +
+                "    th { text-align: left }\n" +
+                "    .size { text-align: right; padding-right: 20px; padding-left: 20px; }\n" +
+                "    footer { font-style: italic; font-size: smaller; margin: 30px 0 100px 0}\n" +
+                "</style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "<h1>" + htmlEncode(title) + "</h1>\n" +
+                "<table>\n" +
+                "    <thead>\n" +
+                "    <tr>\n" +
+                "        <th>Name</th>\n" +
+                "        <th class=\"size\">Size</th>\n" +
+                "        <th>Last Modified</th>\n" +
+                "    </tr>\n" +
+                "    </thead>\n" +
+                "    <tbody>");
+
+            try (
+                DirectoryStream<Path> ds = Files.newDirectoryStream(dir)) {
+                for (Path child : ds) {
+                    File file = child.toFile();
+                    String size = NumberFormat.getIntegerInstance().format(file.length());
+                    String update = htmlEncode(Instant.ofEpochMilli(file.lastModified()).toString());
+                    writer.append("<tr><td>" + htmlEncode(file.getName()) + "</td><td class=\"size\">" + size + "</td><td>" + update + "</td></tr>");
+                }
+            }
+
+            writer.append("</tbody>\n" +
+                "</table>\n" +
+                "<footer>\n" +
+                "    Generated at \n" + Instant.now() +
+                "</footer>\n" +
+                "</body></html>");
+        }
+        return true;
     }
 
 }
@@ -171,6 +233,11 @@ class ClasspathResourceProvider implements ResourceProvider {
         } else {
             response.outputStream();
         }
+    }
+
+    @Override
+    public boolean showDirectoryListing(MuResponse response, boolean sendBody) {
+        return false;
     }
 
 }
