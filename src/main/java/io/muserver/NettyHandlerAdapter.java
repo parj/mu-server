@@ -93,7 +93,9 @@ class NettyHandlerAdapter {
         } catch (Exception e) {
             try {
                 addedToExecutorCallback.onComplete(e);
-            } catch (Exception ignored) { }
+            } catch (Exception ignored) {
+                log.error("err", ignored);
+            }
         }
     }
 

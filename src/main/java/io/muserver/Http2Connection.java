@@ -120,7 +120,7 @@ public final class Http2Connection extends Http2ConnectionHandler implements Htt
         contexts.put(streamId, asyncContext);
         DoneCallback addedToExecutorCallback = error -> {
             if (error != null) {
-                log.info("Failed to add");
+                log.info("Failed to add " + muReq, error);
 
                 stats.onRejectedDueToOverload();
                 try {
