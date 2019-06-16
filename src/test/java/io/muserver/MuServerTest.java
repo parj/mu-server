@@ -3,6 +3,8 @@ package io.muserver;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.junit.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scaffolding.MuAssert;
 import scaffolding.RawClient;
 import scaffolding.ServerUtils;
@@ -365,6 +367,7 @@ public class MuServerTest {
         assertThat(exceptionFromServer.get(10, TimeUnit.SECONDS), instanceOf(Exception.class));
     }
 
+    private static final Logger log = LoggerFactory.getLogger(MuServerTest.class);
     @Test(timeout = 30000)
     public void ifRequestsCannotBeSubmittedToTheExecutorTheyAreRejectedWithA503() throws IOException {
         CountDownLatch firstRequestStartedLatch = new CountDownLatch(1);
@@ -390,23 +393,31 @@ public class MuServerTest {
             int finalI = i;
             executor.submit(() -> {
                 try (Response resp = call(request(server.uri().resolve("/?count=" + finalI)))) {
+                    log.info("1");
                     responses.add(resp.body().string());
                 } catch (Throwable t) {
+                    log.info("2");
                     t.printStackTrace();
                     responses.add(t.getMessage());
                 }
                 responseFinishedLatch.countDown();
+                log.info("3");
+
             });
         }
+        log.info("4");
 
         MuAssert.assertNotTimedOut("firstRequestStartedLatch", firstRequestStartedLatch);
+        log.info("5");
         try (Response resp = call(request(server.uri().resolve("/?count=last")))) {
             assertThat(resp.code(), is(503));
             assertThat(resp.body().string(), is("503 Service Unavailable"));
         }
+        log.info("6");
         thirdRequestFinishedLatch.countDown();
 
         MuAssert.assertNotTimedOut("responseLatch", responseFinishedLatch);
+        log.info("7");
         assertThat(responses, containsInAnyOrder("First bit of 0 and second bit of 0", "First bit of 1 and second bit of 1"));
 
         assertThat(server.stats().rejectedDueToOverload(), is(1L));
