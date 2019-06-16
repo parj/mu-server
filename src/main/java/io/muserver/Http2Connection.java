@@ -121,6 +121,8 @@ public final class Http2Connection extends Http2ConnectionHandler implements Htt
         DoneCallback addedToExecutorCallback = error -> {
             ctx.channel().read();
             if (error != null) {
+                log.info("Failed to add");
+
                 stats.onRejectedDueToOverload();
                 try {
                     sendSimpleResponse(ctx, streamId, "503 Service Unavailable", 503);

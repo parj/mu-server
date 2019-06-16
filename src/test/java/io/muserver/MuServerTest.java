@@ -405,10 +405,10 @@ public class MuServerTest {
 
             });
         }
-        log.info("4");
+//        log.info("4");
 
         MuAssert.assertNotTimedOut("firstRequestStartedLatch", firstRequestStartedLatch);
-        log.info("5");
+//        log.info("5");
         try (Response resp = call(request(server.uri().resolve("/?count=last")))) {
             assertThat(resp.code(), is(503));
             assertThat(resp.body().string(), is("503 Service Unavailable"));
