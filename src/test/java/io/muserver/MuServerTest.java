@@ -378,10 +378,12 @@ public class MuServerTest {
             .addHandler(Method.GET, "/", (request, response, pathParams) -> {
                 // wait until the third request has been made, which should fail due to 2 requests being in progress
                 String count = request.query().get("count");
+                log.info("Starreq " + count);
                 response.sendChunk("First bit of " + count);
                 firstRequestStartedLatch.countDown();
                 thirdRequestFinishedLatch.await();
                 response.sendChunk(" and second bit of " + count);
+                log.info("Endreq " + count);
             })
             .start();
 
