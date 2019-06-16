@@ -119,7 +119,6 @@ public final class Http2Connection extends Http2ConnectionHandler implements Htt
         AsyncContext asyncContext = new AsyncContext(muReq, resp, stats);
         contexts.put(streamId, asyncContext);
         DoneCallback addedToExecutorCallback = error -> {
-            ctx.channel().read();
             if (error != null) {
                 log.info("Failed to add");
 
