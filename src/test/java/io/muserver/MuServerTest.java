@@ -396,8 +396,7 @@ public class MuServerTest {
                     log.info("1");
                     responses.add(resp.body().string());
                 } catch (Throwable t) {
-                    log.info("2");
-                    t.printStackTrace();
+                    log.info("2", t);
                     responses.add(t.getMessage());
                 }
                 responseFinishedLatch.countDown();
@@ -405,7 +404,7 @@ public class MuServerTest {
 
             });
         }
-//        log.info("4");
+        log.info("4");
 
         MuAssert.assertNotTimedOut("firstRequestStartedLatch", firstRequestStartedLatch);
 //        log.info("5");
