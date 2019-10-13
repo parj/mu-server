@@ -214,15 +214,6 @@ public class RestHandlerBuilder implements MuHandlerBuilder<RestHandler> {
         return this;
     }
 
-    /**
-     * @return The current Rest Handler Builder
-     * @deprecated This does nothing. To expose API endpoints, use {@link #withOpenApiJsonUrl(String)} and/or {@link #withOpenApiHtmlUrl(String)}
-     */
-    @Deprecated
-    public RestHandlerBuilder withDocumentation() {
-        return this;
-    }
-
     public RestHandler build() {
         List<MessageBodyReader> readers = EntityProviders.builtInReaders();
         readers.addAll(customReaders);
@@ -295,16 +286,6 @@ public class RestHandlerBuilder implements MuHandlerBuilder<RestHandler> {
      */
     public RestHandlerBuilder withCORS(CORSConfigBuilder corsConfig) {
         return withCORS(corsConfig.build());
-    }
-
-    /**
-     * @param resources Resources to register
-     * @return Returns a rest handler with the given resources.
-     * @deprecated Use restHandler(resources).build() instead.
-     */
-    @Deprecated
-    public static RestHandler create(Object... resources) {
-        return restHandler(resources).build();
     }
 
     /**
