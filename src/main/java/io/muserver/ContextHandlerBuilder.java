@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.muserver.MuServerBuilder.getContextualHandlerForResourceHandler;
-
 /**
  * Use this to serve a list of handlers from a base path.
  */
@@ -106,14 +104,8 @@ public class ContextHandlerBuilder implements MuHandlerBuilder<ContextHandler> {
      */
     public ContextHandlerBuilder addHandler(MuHandler handler) {
         if (handler != null) {
-            handler = getContextualHandlerForResourceHandler(handler);
             handlers.add(handler);
         }
-        return this;
-    }
-
-    ContextHandlerBuilder addHandlerTemp(MuHandler handler) {
-        handlers.add(handler);
         return this;
     }
 

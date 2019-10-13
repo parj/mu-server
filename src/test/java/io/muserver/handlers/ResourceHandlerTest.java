@@ -96,10 +96,8 @@ public class ResourceHandlerTest {
             .withGzipEnabled(false)
             .addHandler(context("/a")
                 .addHandler(context("/b")
-                    .addHandler(context("/c")
-                        .addHandler(classpathHandler("/sample-static")
-                            .withPathToServeFrom("/d")
-                        ))))
+                    .addHandler(context("/c/d")
+                        .addHandler(classpathHandler("/sample-static")))))
             .start();
 
         Map<String, List<String>> headersFromGET;
@@ -205,25 +203,6 @@ public class ResourceHandlerTest {
             Map<String, List<String>> headersFromHEAD = resp.headers().toMultimap();
             headersFromHEAD.remove("date");
             assertThat(headersFromHEAD, equalTo(headersFromGET));
-        }
-    }
-
-    @Test
-    public void canServeFromPath() throws Exception {
-        server = ServerUtils.httpsServerForTest()
-            .addHandler(fileHandler("src/test/resources/sample-static")
-                .withPathToServeFrom("/blah")
-                .build())
-            .start();
-
-        try (Response badOne = call(request().url(server.httpsUri().resolve("/index.html").toURL()))) {
-            assertThat(badOne.code(), is(404));
-        }
-
-        try (Response resp = call(request().url(server.httpsUri().resolve("/blah/index.html").toURL()))) {
-            assertThat(resp.code(), is(200));
-            assertThat(resp.header("Content-Type"), is("text/html"));
-            assertThat(resp.body().string(), is(readResource("/sample-static/index.html")));
         }
     }
 
