@@ -1,6 +1,5 @@
 package io.muserver;
 
-import javax.net.ssl.SSLContext;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.Set;
@@ -96,23 +95,13 @@ class MuServerImpl implements MuServer {
     }
 
     @Override
-    public void changeSSLContext(SSLContext newSSLContext) {
-        changeSSLContext(SSLContextBuilder.sslContext().withSSLContext(newSSLContext));
-    }
-
-    @Override
-    public void changeSSLContext(SSLContextBuilder newSSLContext) {
-        Mutils.notNull("newSSLContext", newSSLContext);
+    public void changeHttpsConfig(HttpsConfigBuilder newHttpsConfig) {
+        Mutils.notNull("newHttpsConfig", newHttpsConfig);
         try {
-            sslContextProvider.set(newSSLContext.toNettySslContext(http2Enabled));
+            sslContextProvider.set(newHttpsConfig.toNettySslContext(http2Enabled));
         } catch (Exception e) {
             throw new MuException("Error while changing SSL Certificate. The old one will still be used.", e);
         }
-    }
-
-    @Override
-    public void changeHttpsConfig(HttpsConfigBuilder newHttpsConfig) {
-        changeSSLContext(newHttpsConfig);
     }
 
     @Override

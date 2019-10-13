@@ -40,32 +40,32 @@ public class HttpsConfigBuilderTest {
 
     @Test
     public void canCreateFromTheFileSystem() throws IOException {
-        HttpsConfigBuilder sslContextBuilder = HttpsConfigBuilder.httpsConfig()
+        HttpsConfigBuilder httpsConfigBuilder = HttpsConfigBuilder.httpsConfig()
             .withKeystoreType("PKCS12")
             .withKeystorePassword("Very5ecure")
             .withKeyPassword("Very5ecure")
             .withKeystore(new File("src/main/resources/io/muserver/resources/localhost.p12"));
-        test(sslContextBuilder);
+        test(httpsConfigBuilder);
     }
 
     @Test
     public void canCreateFromTheClasspath() throws IOException {
-        HttpsConfigBuilder sslContextBuilder = HttpsConfigBuilder.httpsConfig()
+        HttpsConfigBuilder httpsConfigBuilder = HttpsConfigBuilder.httpsConfig()
             .withKeystoreType("PKCS12")
             .withKeystorePassword("Very5ecure")
             .withKeyPassword("Very5ecure")
             .withKeystoreFromClasspath("/io/muserver/resources/localhost.p12");
-        test(sslContextBuilder);
+        test(httpsConfigBuilder);
     }
 
     @Test
     public void canCreateFromInputStream() throws IOException {
-        HttpsConfigBuilder sslContextBuilder = HttpsConfigBuilder.httpsConfig()
+        HttpsConfigBuilder httpsConfigBuilder = HttpsConfigBuilder.httpsConfig()
             .withKeystoreType("PKCS12")
             .withKeystorePassword("Very5ecure")
             .withKeyPassword("Very5ecure")
             .withKeystore(new FileInputStream("src/main/resources/io/muserver/resources/localhost.p12"));
-        test(sslContextBuilder);
+        test(httpsConfigBuilder);
     }
 
     @Test
@@ -77,9 +77,9 @@ public class HttpsConfigBuilderTest {
             kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             kmf.init(ks, "Very5ecure".toCharArray());
         }
-        HttpsConfigBuilder sslContextBuilder = HttpsConfigBuilder.httpsConfig()
+        HttpsConfigBuilder httpsConfigBuilder = HttpsConfigBuilder.httpsConfig()
             .withKeyManagerFactory(kmf);
-        test(sslContextBuilder);
+        test(httpsConfigBuilder);
     }
 
     @Test
@@ -87,9 +87,9 @@ public class HttpsConfigBuilderTest {
         AtomicReference<SSLInfo> initialSSLInfo = new AtomicReference<>();
         AtomicReference<SSLInfo> eventualSSLInfo = new AtomicReference<>();
 
-        HttpsConfigBuilder sslContextBuilder = HttpsConfigBuilder.unsignedLocalhost();
+        HttpsConfigBuilder httpsConfigBuilder = HttpsConfigBuilder.unsignedLocalhost();
         MuServer server = ServerUtils.httpsServerForTest()
-            .withHttpsConfig(sslContextBuilder)
+            .withHttpsConfig(httpsConfigBuilder)
             .addHandler(Method.GET, "/", (req, resp, pp) -> {
                 initialSSLInfo.set(req.server().sslInfo());
                 resp.write("Hello");
@@ -104,14 +104,14 @@ public class HttpsConfigBuilderTest {
             MuAssert.stopAndCheck(server);
         }
 
-        sslContextBuilder = HttpsConfigBuilder.unsignedLocalhost()
+        httpsConfigBuilder = HttpsConfigBuilder.unsignedLocalhost()
             .withCipherFilter((supportedCiphers, defaultCiphers) -> {
                 List<String> selected = new ArrayList<>(defaultCiphers);
                 selected.remove(cipher);
                 return selected;
             });
         server = ServerUtils.httpsServerForTest()
-            .withHttpsConfig(sslContextBuilder)
+            .withHttpsConfig(httpsConfigBuilder)
             .addHandler(Method.GET, "/", (req, resp, pp) -> {
                 eventualSSLInfo.set(req.server().sslInfo());
                 resp.write("Hello");
