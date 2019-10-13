@@ -123,26 +123,27 @@ class NettyRequestAdapter implements MuRequest {
         return this.startTime;
     }
 
+    @Override
     public Method method() {
         return method;
     }
 
-
+    @Override
     public URI uri() {
         return uri;
     }
 
-
+    @Override
     public URI serverURI() {
         return serverUri;
     }
 
-
+    @Override
     public Headers headers() {
         return headers;
     }
 
-
+    @Override
     public Optional<InputStream> inputStream() {
         if (inputStream == null) {
             return Optional.empty();
@@ -161,7 +162,7 @@ class NettyRequestAdapter implements MuRequest {
         }
     }
 
-
+    @Override
     public String readBodyAsString() throws IOException {
         MediaType mediaType = headers().contentType();
         Charset bodyCharset = UTF_8;
@@ -202,10 +203,6 @@ class NettyRequestAdapter implements MuRequest {
         uploads.get(name).add(file);
     }
 
-    public String parameter(String name) {
-        return query().get(name);
-    }
-
     @Override
     public RequestParameters query() {
         return query;
@@ -215,19 +212,6 @@ class NettyRequestAdapter implements MuRequest {
     public RequestParameters form() throws IOException {
         ensureFormDataLoaded();
         return form;
-    }
-
-    public List<String> parameters(String name) {
-        return query.getAll(name);
-    }
-
-    public String formValue(String name) throws IOException {
-        return form().get(name);
-    }
-
-
-    public List<String> formValues(String name) throws IOException {
-        return form().getAll(name);
     }
 
     @Override
@@ -266,16 +250,6 @@ class NettyRequestAdapter implements MuRequest {
     @Override
     public String relativePath() {
         return relativePath;
-    }
-
-    @Override
-    public Object state() {
-        return attribute("_value_");
-    }
-
-    @Override
-    public void state(Object value) {
-        attribute("_value_", value);
     }
 
     @Override
@@ -396,7 +370,9 @@ class NettyRequestAdapter implements MuRequest {
     }
 
     void clean() {
-        state(null);
+        if (attributes != null) {
+            attributes.clear();
+        }
         if (multipartRequestDecoder != null) {
             // need to clear the datas before destroying. See https://github.com/netty/netty/issues/7814#issuecomment-397855311
             multipartRequestDecoder.getBodyHttpDatas().clear();
