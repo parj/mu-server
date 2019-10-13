@@ -445,6 +445,7 @@ public class OpenApiDocumentorTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void tagsDefaultToClassNameUnlessSpecified() throws IOException {
 
         @Path("/a")

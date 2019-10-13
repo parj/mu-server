@@ -495,15 +495,6 @@ class NettyRequestAdapter implements MuRequest {
 
         }
 
-        @Override
-        public void setResponseCompletedHandler(ResponseCompletedListener responseCompletedListener) {
-            if (responseCompletedListener == null) {
-                this.responseCompleteListener = null;
-            } else {
-                this.responseCompleteListener = info -> responseCompletedListener.onComplete(info.completedSuccessfully());
-            }
-        }
-
         void onClientDisconnected() {
             ResponseCompleteListener listener = this.responseCompleteListener;
             if (listener != null) {

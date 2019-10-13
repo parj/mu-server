@@ -6,21 +6,11 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * @deprecated This interface is no longer used. Instead call {@link MuRequest#handleAsync()} from a standard Mu Handler.
- */
-@Deprecated
-public class AsyncContext implements ResponseInfo {
+class AsyncContext implements ResponseInfo {
     private static final Logger log = LoggerFactory.getLogger(AsyncContext.class);
     public final MuRequest request;
     public final MuResponse response;
     private final ResponseCompleteListener completedCallback;
-
-    /**
-     * @deprecated Use {@link MuRequest#attribute(String)} instead.
-     */
-    @Deprecated
-    public Object state;
 
     GrowableByteBufferInputStream requestBody;
     private AtomicBoolean completed = new AtomicBoolean(false);

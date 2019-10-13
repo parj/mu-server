@@ -55,26 +55,4 @@ public interface AsyncHandle {
      */
     void setResponseCompleteHandler(ResponseCompleteListener responseCompleteListener);
 
-    /**
-     * Add a listener for when request processing is complete. One use of this is to detect early client disconnects
-     * so that expensive operations can be cancelled.
-     * @param responseCompletedListener The handler to invoke when the request is complete.
-     * @deprecated Use {@link #setResponseCompleteHandler(ResponseCompleteListener)} instead
-     */
-    @Deprecated
-    void setResponseCompletedHandler(ResponseCompletedListener responseCompletedListener);
-
-    /**
-     * Replaced with {@link ResponseCompleteListener}
-     */
-    @Deprecated
-    interface ResponseCompletedListener {
-        /**
-         * <p>Called when it is detected that the client request is completed.</p>
-         * <p>Note that this may be called if the client disconnects early, however it many cases network disconnects will not be detected.</p>
-         * @param responseWasCompleted True if the response was fully processed; false if it wasn't (for example if the
-         *                            request was closed by the client before completing).
-         */
-        void onComplete(boolean responseWasCompleted);
-    }
 }

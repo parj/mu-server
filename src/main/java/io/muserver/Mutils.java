@@ -9,8 +9,6 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -230,8 +228,14 @@ public class Mutils {
      * @param <T>    The type of the value
      * @return The first object in the list that is not null (or null, if all are null)
      */
+    @SafeVarargs
     public static <T> T coalesce(T... values) {
-        return Stream.of(values).filter(Objects::nonNull).findFirst().orElse(null);
+        for (T value : values) {
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
     }
 
     static void closeSilently(Closeable closeable) {

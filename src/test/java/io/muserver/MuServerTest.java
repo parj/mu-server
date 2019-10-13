@@ -300,7 +300,7 @@ public class MuServerTest {
 
         try (Response resp = call(request(server.uri()))) {
             String body = resp.body().string();
-            assertThat(body, isOneOf("HTTP/1.1", "HTTP/2"));
+            assertThat(body, oneOf("HTTP/1.1", "HTTP/2"));
         }
     }
 

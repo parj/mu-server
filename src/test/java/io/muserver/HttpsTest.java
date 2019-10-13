@@ -41,7 +41,7 @@ public class HttpsTest {
                 + server.httpsUri().getPort() + "/"));
         }
         SSLInfo sslInfo = actualSSLInfo.get();
-        assertThat(sslInfo.providerName(), isOneOf("JDK", "OpenSSL"));
+        assertThat(sslInfo.providerName(), oneOf("JDK", "OpenSSL"));
         assertThat(sslInfo.protocols(), hasItem("TLSv1.2"));
         assertThat(sslInfo.ciphers().size(), greaterThan(0));
 
