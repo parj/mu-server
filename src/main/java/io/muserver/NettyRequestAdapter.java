@@ -480,17 +480,6 @@ class NettyRequestAdapter implements MuRequest {
         }
 
         @Override
-        public void write(ByteBuffer data, WriteCallback callback) {
-            write(data, error -> {
-                if (error == null) {
-                    callback.onSuccess();
-                } else {
-                    callback.onFailure(error);
-                }
-            });
-        }
-
-        @Override
         public Future<Void> write(ByteBuffer data) {
             NettyResponseAdaptor response = (NettyResponseAdaptor) request.nettyAsyncContext.response;
             try {
