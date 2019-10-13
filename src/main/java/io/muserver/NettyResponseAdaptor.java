@@ -19,7 +19,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.concurrent.Future;
 
 import static io.muserver.ContentTypes.TEXT_PLAIN_UTF8;
 
@@ -91,10 +90,6 @@ abstract class NettyResponseAdaptor implements MuResponse {
         if (outputState == OutputState.FULL_SENT || outputState == OutputState.FINISHED || outputState == OutputState.DISCONNECTED) {
             throw new IllegalStateException("Cannot write data as response has already completed");
         }
-    }
-
-    public Future<Void> writeAsync(String text) {
-        return write(textToBuffer(text), false);
     }
 
     ChannelFuture write(ByteBuffer data) {
