@@ -41,12 +41,6 @@ class Http1Headers implements Headers {
     }
 
     @Override
-    @Deprecated
-    public Integer getInt(CharSequence name) {
-        return entries.getInt(name);
-    }
-
-    @Override
     public int getInt(CharSequence name, int defaultValue) {
         return entries.getInt(name, defaultValue);
     }
@@ -94,18 +88,6 @@ class Http1Headers implements Headers {
     public boolean getBoolean(String name) {
         String val = get(name, "").toLowerCase();
         return isTruthy(val);
-    }
-
-    @Override
-    @Deprecated
-    public Short getShort(CharSequence name) {
-        return entries.getShort(name);
-    }
-
-    @Override
-    @Deprecated
-    public short getShort(CharSequence name, short defaultValue) {
-        return entries.getShort(name, defaultValue);
     }
 
     @Override
@@ -202,13 +184,6 @@ class Http1Headers implements Headers {
     }
 
     @Override
-    @Deprecated
-    public Headers addShort(CharSequence name, short value) {
-        entries.addShort(name, value);
-        return this;
-    }
-
-    @Override
     public Headers set(String name, Object value) {
         entries.set(name, value);
         return this;
@@ -258,13 +233,6 @@ class Http1Headers implements Headers {
     }
 
     @Override
-    @Deprecated
-    public Headers setShort(CharSequence name, short value) {
-        entries.setShort(name, value);
-        return this;
-    }
-
-    @Override
     public Headers remove(String name) {
         entries.remove(name);
         return this;
@@ -295,21 +263,6 @@ class Http1Headers implements Headers {
     @Override
     public boolean containsValue(CharSequence name, CharSequence value, boolean ignoreCase) {
         return entries.containsValue(name, value, ignoreCase);
-    }
-
-    @Override
-    public String getAsString(CharSequence name) {
-        return entries.getAsString(name);
-    }
-
-    @Override
-    public List<String> getAllAsString(CharSequence name) {
-        return entries.getAllAsString(name);
-    }
-
-    @Override
-    public Iterator<Map.Entry<String, String>> iteratorAsString() {
-        return entries.iteratorAsString();
     }
 
     @Override

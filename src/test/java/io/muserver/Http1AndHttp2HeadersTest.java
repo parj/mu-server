@@ -268,12 +268,11 @@ public class Http1AndHttp2HeadersTest {
         nettyHeady.set("content-length", "123");
         Http2Headers headers = new Http2Headers(nettyHeady, false);
         assertThat(stringsFrom(headers.iterator()), is("content-type=text/html content-length=123"));
-        assertThat(stringsFrom(headers.iteratorAsString()), is("content-type=text/html content-length=123"));
         assertThat(stringsFrom(headers.entries().iterator()), is("content-type=text/html content-length=123"));
         assertThat(headers.names(), containsInAnyOrder("content-type", "content-length"));
     }
 
-    static String stringsFrom(Iterator<Map.Entry<String, String>> iterator) {
+    private static String stringsFrom(Iterator<Map.Entry<String, String>> iterator) {
         List<Map.Entry<String,String>> list = new ArrayList<>();
         iterator.forEachRemaining(list::add);
         return list.stream().map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining(" "));

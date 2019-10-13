@@ -35,9 +35,6 @@ public interface Headers extends Iterable<Map.Entry<String, String>> {
      */
     String get(CharSequence name, String defaultValue);
 
-    @Deprecated
-    Integer getInt(CharSequence name);
-
     /**
      * Gets the parameter as an integer, or returns the default value if it was not specified or was in an invalid format.
      * @param name The name of the parameter.
@@ -78,12 +75,6 @@ public interface Headers extends Iterable<Map.Entry<String, String>> {
      * @return Returns true if the value was truthy, or false if it was falsy or not specified.
      */
     boolean getBoolean(String name);
-
-    @Deprecated
-    Short getShort(CharSequence name);
-
-    @Deprecated
-    short getShort(CharSequence name, short defaultValue);
 
     Long getTimeMillis(CharSequence name);
 
@@ -144,9 +135,6 @@ public interface Headers extends Iterable<Map.Entry<String, String>> {
 
     Headers addInt(CharSequence name, int value);
 
-    @Deprecated
-    Headers addShort(CharSequence name, short value);
-
     Headers set(String name, Object value);
 
     Headers set(CharSequence name, Object value);
@@ -160,9 +148,6 @@ public interface Headers extends Iterable<Map.Entry<String, String>> {
     Headers setAll(Headers headers);
 
     Headers setInt(CharSequence name, int value);
-
-    @Deprecated
-    Headers setShort(CharSequence name, short value);
 
     Headers remove(String name);
 
@@ -197,15 +182,6 @@ public interface Headers extends Iterable<Map.Entry<String, String>> {
      * @return True if a header name with the given value exists.
      */
     boolean containsValue(CharSequence name, CharSequence value, boolean ignoreCase);
-
-    @Deprecated
-    String getAsString(CharSequence name);
-
-    @Deprecated
-    List<String> getAllAsString(CharSequence name);
-
-    @Deprecated
-    Iterator<Map.Entry<String, String>> iteratorAsString();
 
     boolean equals(Object o);
 
