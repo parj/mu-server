@@ -1,7 +1,6 @@
 package io.muserver;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,44 +35,6 @@ public class ContextHandlerBuilder implements MuHandlerBuilder<ContextHandler> {
     public static ContextHandlerBuilder context(String path) {
         return new ContextHandlerBuilder()
             .withPath(path);
-    }
-
-    /**
-     * @param path     The path
-     * @param handlers The handler
-     * @return A context handler that you can add handlers to
-     * @deprecated Use {@link #context(String)} and then add handlers on to that.
-     */
-    @Deprecated
-    public static ContextHandlerBuilder context(String path, MuHandler... handlers) {
-        return new ContextHandlerBuilder()
-            .withPath(path)
-            .withHandlers(handlers);
-    }
-
-    /**
-     * @param path     The path
-     * @param handlers The handler
-     * @return A context handler that you can add handlers to
-     * @deprecated Use {@link #context(String)} and then add handlers on to that.
-     */
-    @Deprecated
-    public static ContextHandlerBuilder context(String path, MuHandlerBuilder... handlers) {
-        return new ContextHandlerBuilder()
-            .withPath(path)
-            .withHandlers(handlers);
-    }
-
-    private ContextHandlerBuilder withHandlers(MuHandler... handlers) {
-        this.handlers.addAll(Arrays.asList(handlers));
-        return this;
-    }
-
-    private ContextHandlerBuilder withHandlers(MuHandlerBuilder... handlers) {
-        for (MuHandlerBuilder handler : handlers) {
-            this.addHandler(handler);
-        }
-        return this;
     }
 
     /**
