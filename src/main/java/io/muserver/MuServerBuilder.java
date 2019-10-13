@@ -91,17 +91,6 @@ public class MuServerBuilder {
     }
 
     /**
-     * @param port The HTTP port to use. A value of 0 will have a random port assigned; a value of -1 will
-     *             result in no HTTP connector.
-     * @return The current Mu Server Builder
-     * @deprecated Use {@link #withHttpPort(int)} instead
-     */
-    @Deprecated
-    public MuServerBuilder withHttpConnection(int port) {
-        return withHttpPort(port);
-    }
-
-    /**
      * Enables gzip for certain resource types. The default is <code>true</code>. By default, the
      * gzippable resource types are taken from {@link ResourceType#getResourceTypes()} where
      * {@link ResourceType#gzip} is <code>true</code>.
@@ -130,18 +119,6 @@ public class MuServerBuilder {
         this.gzipEnabled = true;
         this.mimeTypesToGzip = mimeTypesToGzip;
         this.minimumGzipSize = minimumGzipSize;
-        return this;
-    }
-
-    /**
-     * Turns off HTTP.
-     *
-     * @return The current builder.
-     * @deprecated It is off by default so this is not needed.
-     */
-    @Deprecated
-    public MuServerBuilder withHttpDisabled() {
-        this.httpPort = -1;
         return this;
     }
 
@@ -259,18 +236,6 @@ public class MuServerBuilder {
         Mutils.notNull("unit", unit);
         this.idleTimeoutMills = unit.toMillis(duration);
         return this;
-    }
-
-    /**
-     * <p>Throws an exception. Do not use.</p>
-     *
-     * @param handler Ignored
-     * @return Never returns
-     * @deprecated For async handling, add a normal {@link MuHandler} and call {@link MuRequest#handleAsync()}
-     */
-    @Deprecated
-    public MuServerBuilder addAsyncHandler(AsyncMuHandler handler) {
-        throw new RuntimeException("This method is not supported. For async handling, add a normal MuHandler and call MuRequest#handleAsync()");
     }
 
     /**
